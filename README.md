@@ -13,8 +13,13 @@ Tento projekt je mobilní aplikace kalendáře, která kombinuje funkce tradičn
 
 ## Instalace
 
-1. Stažení nejnovější verze aplikace ze zdroje XYZ.
+1. Stažení nejnovější verze aplikace z tohoto github repoozitáře.
 2. Nainstalování aplikace na vaše mobilní zařízení pomocí standardního procesu instalace aplikací.
+
+## Nástroje
+- **Vývovojové prostředí**: Pro vývoj aplikace jsme využili nejnovější verzi Android studio (verze 2023.2.1).
+- **Jazyk**: Pracovali jsme s programovacím jazykem kotlin který byl výrazně ovlivněn jazykem java, se kterým již máme zkušenosti.
+- **Databáze**: Bylo nutné taky použít databázi pro ukládání úkolů každého uživatele. Využili jsme tedy služby firebase databáze.
 
 ## Použití
 
