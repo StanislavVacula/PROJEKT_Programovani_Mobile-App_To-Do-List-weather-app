@@ -26,7 +26,3 @@ Tento projekt je mobilní aplikace kalendáře, která kombinuje funkce tradičn
 ## Podpora a Příspěvky
 
 Pokud narazíte na chyby nebo máte návrhy na vylepšení, můžete nás kontaktovat na našem webovém webu nebo otevřít nový problém v našem repozitáři na GitHubu.
-
-## Licence
-
-Tento projekt je licencován pod licencí XYZ. Pro více informací si prosím přečtěte soubor LICENSE.
