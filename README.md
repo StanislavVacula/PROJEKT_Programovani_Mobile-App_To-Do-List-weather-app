@@ -1,4 +1,4 @@
-# Název Projektu
+# Mobile-App Kalendář 
 
 ## Popis
 
