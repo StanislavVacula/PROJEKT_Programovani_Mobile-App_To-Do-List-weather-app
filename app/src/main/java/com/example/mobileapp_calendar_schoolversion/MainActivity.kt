@@ -3,6 +3,7 @@ package com.example.mobileapp_calendar_schoolversion
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.Button
@@ -75,13 +76,10 @@ class MainActivity : Activity() {
         val input = EditText(this)
         builder.setView(input)
 
-        builder.setPositiveButton("Add") { dialog, _ ->
+        builder.setPositiveButton("OK") { dialog, _ ->
             val taskName = input.text.toString()
-            val selectedDate = dateTV.text.toString()
-            taskManager.addTask(selectedDate, taskName)
-            taskListForSelectedDate.addTask(selectedDate, taskName)
-            updateTaskListForSelectedDate(selectedDate)
             dialog.dismiss()
+            showTimePickerDialog(taskName)
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
@@ -89,6 +87,19 @@ class MainActivity : Activity() {
         }
 
         builder.create().show()
+    }
+
+    private fun showTimePickerDialog(taskName: String) {
+        val timePickerDialog = TimePickerDialog(this, { _, hourOfDay, minute ->
+            val selectedDate = dateTV.text.toString()
+            val time = String.format("%02d:%02d", hourOfDay, minute)
+            taskManager.addTask(selectedDate, taskName, time)
+            taskListForSelectedDate.addTask(selectedDate, "$taskName at $time")
+            updateTaskListForSelectedDate(selectedDate)
+        }, 12, 0, true)
+
+        timePickerDialog.setTitle("Select Time")
+        timePickerDialog.show()
     }
 
     private fun showTasksForDate(tasks: List<String>, date: String) {
@@ -137,7 +148,7 @@ class MainActivity : Activity() {
         builder.create().show()
     }
 
-    data class Task(val description: String, val date: String)
+    data class Task(val description: String, val date: String, var time: String)
 
     inner class TaskManager(private val context: Context) {
         private val tasks = mutableListOf<Task>()
@@ -147,8 +158,8 @@ class MainActivity : Activity() {
             loadTasks()
         }
 
-        fun addTask(date: String, taskName: String) {
-            tasks.add(Task(taskName, date))
+        fun addTask(date: String, taskName: String, time: String) {
+            tasks.add(Task(taskName, date, time))
             saveTasks()
         }
 
