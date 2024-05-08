@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
@@ -78,8 +79,12 @@ class MainActivity : Activity() {
 
         builder.setPositiveButton("OK") { dialog, _ ->
             val taskName = input.text.toString()
-            dialog.dismiss()
-            showTimePickerDialog(taskName)
+            if (taskName.isBlank()) {
+                Toast.makeText(this, "Task name cannot be empty", Toast.LENGTH_SHORT).show()
+            } else {
+                dialog.dismiss()
+                showTimePickerDialog(taskName)
+            }
         }
 
         builder.setNegativeButton("Cancel") { dialog, _ ->
@@ -159,20 +164,21 @@ class MainActivity : Activity() {
         val originalTask = taskManager.getTask(date, task)?.description
 
         editNameButton.setOnClickListener {
-            showEditTaskNameDialog(date, task)
+            showEditTaskNameDialog(date, task, taskNameTextView)
         }
 
         editTimeButton.setOnClickListener {
-            showEditTaskTimeDialog(date, task)
+            showEditTaskTimeDialog(date, task, taskNameTextView)
         }
+
+        val dialog = builder.create()
 
         removeButton.setOnClickListener {
             taskManager.removeTask(date, task)
             taskListForSelectedDate.removeTask(date, task)
             updateTaskListForSelectedDate(date)
+            dialog.dismiss() // Zavřete dialog po odstranění úkolu
         }
-
-        val dialog = builder.create()
 
         cancelButton.setOnClickListener {
             // Zrušení editace - obnovte původní stav úkolu
@@ -192,39 +198,42 @@ class MainActivity : Activity() {
         dialog.show()
     }
 
-    private fun showEditTaskNameDialog(date: String, task: String) {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Edit Task Name")
+   private fun showEditTaskNameDialog(date: String, task: String, taskNameTextView: TextView) {
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle("Edit Task Name")
 
-        val input = EditText(this)
-        builder.setView(input)
+    val input = EditText(this)
+    builder.setView(input)
 
-        builder.setPositiveButton("OK") { dialog, _ ->
-            val newTaskName = input.text.toString()
-            taskManager.editTaskName(date, task, newTaskName)
-            taskListForSelectedDate.editTaskName(date, task, newTaskName)
-            updateTaskListForSelectedDate(date)
-            dialog.dismiss()
-        }
-
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.dismiss()
-        }
-
-        builder.create().show()
+    builder.setPositiveButton("OK") { _, _ ->
+        val newTaskName = input.text.toString()
+        taskManager.editTaskName(date, task, newTaskName)
+        taskListForSelectedDate.editTaskName(date, task, newTaskName)
+        updateTaskListForSelectedDate(date) // Aktualizujte seznam úkolů
+        val taskTime = task.substringAfter(" at ") // Získejte čas úkolu
+        taskNameTextView.text = "$newTaskName at $taskTime" // Aktualizujte text v taskNameTextView
     }
 
-    private fun showEditTaskTimeDialog(date: String, task: String) {
-        val timePickerDialog = TimePickerDialog(this, { _, hourOfDay, minute ->
-            val newTime = String.format("%02d:%02d", hourOfDay, minute)
-            taskManager.editTaskTime(date, task, newTime)
-            taskListForSelectedDate.editTaskTime(date, task, newTime)
-            updateTaskListForSelectedDate(date)
-        }, 12, 0, true)
-
-        timePickerDialog.setTitle("Select New Time")
-        timePickerDialog.show()
+    builder.setNegativeButton("Cancel") { dialog, _ ->
+        dialog.dismiss()
     }
+
+    builder.create().show()
+}
+
+private fun showEditTaskTimeDialog(date: String, task: String, taskNameTextView: TextView) {
+    val timePickerDialog = TimePickerDialog(this, { _, hourOfDay, minute ->
+        val newTime = String.format("%02d:%02d", hourOfDay, minute)
+        taskManager.editTaskTime(date, task, newTime)
+        taskListForSelectedDate.editTaskTime(date, task, newTime)
+        updateTaskListForSelectedDate(date) // Aktualizujte seznam úkolů
+        val taskName = task.substringBefore(" at ") // Získejte název úkolu bez času
+        taskNameTextView.text = "$taskName at $newTime" // Aktualizujte text v taskNameTextView
+    }, 12, 0, true)
+
+    timePickerDialog.setTitle("Select New Time")
+    timePickerDialog.show()
+}
 
     data class Task(var description: String, val date: String, var time: String)
 
@@ -269,9 +278,12 @@ class MainActivity : Activity() {
             saveTasks()
         }
 
-        fun editTaskName(date: String, taskName: String, newTaskName: String) {
-            tasks.find { it.date == date && it.description == taskName }?.description = newTaskName
-            saveTasks()
+        fun editTaskName(date: String, task: String, newTaskName: String) {
+            tasks.find { it.date == date && it.description == task }?.let { task ->
+                val taskTime = task.time // Získejte čas úkolu
+                task.description = "$newTaskName at $taskTime" // Vytvořte nový řetězec s novým názvem úkolu a původním časem
+                saveTasks()
+            }
         }
 
         fun editTaskTime(date: String, taskName: String, newTime: String) {
@@ -322,7 +334,8 @@ class MainActivity : Activity() {
             tasksMap[date]?.let { tasks ->
                 val index = tasks.indexOf(task)
                 if (index != -1) {
-                    tasks[index] = tasks[index].replaceBefore(" at ", "$newTaskName at ")
+                    val taskTime = task.substringAfter(" at ") // Získejte čas úkolu
+                    tasks[index] = "$newTaskName at $taskTime" // Vytvořte nový řetězec s novým názvem úkolu a původním časem
                     saveTasksMap()
                 }
             }
@@ -332,7 +345,8 @@ class MainActivity : Activity() {
             tasksMap[date]?.let { tasks ->
                 val index = tasks.indexOf(task)
                 if (index != -1) {
-                    tasks[index] = tasks[index].replaceAfter(" at ", " at $newTime")
+                    val taskName = task.substringBefore(" at ") // Získejte název úkolu bez času
+                    tasks[index] = "$taskName at $newTime" // Vytvořte nový řetězec s původním názvem úkolu a novým časem
                     saveTasksMap()
                 }
             }
