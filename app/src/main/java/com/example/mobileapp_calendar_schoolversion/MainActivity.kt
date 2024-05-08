@@ -20,7 +20,7 @@ class MainActivity : Activity() {
     private lateinit var calendarView: CalendarView
     private lateinit var taskListTextView: TextView
     private lateinit var addTaskButton: Button
-    private lateinit var removeTaskButton: Button
+    private lateinit var editTaskButton: Button
     private lateinit var taskManager: TaskManager
     private lateinit var taskListForSelectedDate: TaskListForSelectedDate
 
@@ -33,7 +33,7 @@ class MainActivity : Activity() {
         calendarView = findViewById(R.id.calendarView)
         addTaskButton = findViewById(R.id.addTaskButton)
         taskListTextView = findViewById(R.id.taskListTextView)
-        removeTaskButton = findViewById(R.id.removeTaskButton)
+        editTaskButton = findViewById(R.id.editTaskButton)
 
         taskManager = TaskManager(this)
         taskListForSelectedDate = TaskListForSelectedDate(this)
@@ -52,8 +52,8 @@ class MainActivity : Activity() {
             showAddTaskDialog()
         }
 
-        removeTaskButton.setOnClickListener {
-            showRemoveTaskDialog()
+        editTaskButton.setOnClickListener {
+            showEditTaskDialog()
         }
     }
 
@@ -115,29 +115,20 @@ class MainActivity : Activity() {
         taskListTextView.text = taskStringBuilder.toString()
     }
 
-    private fun showRemoveTaskDialog() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Remove Task")
-
+    private fun showEditTaskDialog() {
         val tasksForDate = taskListForSelectedDate.getTasks(dateTV.text.toString())
-        val checkedItems = BooleanArray(tasksForDate.size)
-        builder.setMultiChoiceItems(tasksForDate.toTypedArray(), checkedItems) { _, which, isChecked ->
-            checkedItems[which] = isChecked
+        val checkedItem = intArrayOf(0)
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Edit Task")
+
+        builder.setSingleChoiceItems(tasksForDate.toTypedArray(), 0) { _, which ->
+            checkedItem[0] = which
         }
 
-        builder.setPositiveButton("Remove") { dialog, _ ->
+        builder.setPositiveButton("OK") { dialog, _ ->
             val selectedDate = dateTV.text.toString()
-            val tasksToRemove = mutableListOf<String>()
-            tasksForDate.forEachIndexed { index, task ->
-                if (checkedItems[index]) {
-                    tasksToRemove.add(task)
-                }
-            }
-            tasksToRemove.forEach { task ->
-                taskManager.removeTask(selectedDate, task)
-                taskListForSelectedDate.removeTask(selectedDate, task)
-            }
-            updateTaskListForSelectedDate(selectedDate)
+            val taskToEdit = tasksForDate[checkedItem[0]]
+            showEditOptionsDialog(selectedDate, taskToEdit)
             dialog.dismiss()
         }
 
@@ -148,7 +139,94 @@ class MainActivity : Activity() {
         builder.create().show()
     }
 
-    data class Task(val description: String, val date: String, var time: String)
+    private fun showEditOptionsDialog(date: String, task: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Edit Options")
+
+        val view = layoutInflater.inflate(R.layout.dialog_edit_options, null)
+        builder.setView(view)
+
+        val taskNameTextView = view.findViewById<TextView>(R.id.taskNameTextView)
+        taskNameTextView.text = task
+
+        val editNameButton = view.findViewById<Button>(R.id.editNameButton)
+        val editTimeButton = view.findViewById<Button>(R.id.editTimeButton)
+        val removeButton = view.findViewById<Button>(R.id.removeButton)
+        val cancelButton = view.findViewById<Button>(R.id.cancelButton)
+        val confirmButton = view.findViewById<Button>(R.id.confirmButton)
+
+        // Uložte původní stav úkolu pro případ, že budete chtít změny zrušit
+        val originalTask = taskManager.getTask(date, task)?.description
+
+        editNameButton.setOnClickListener {
+            showEditTaskNameDialog(date, task)
+        }
+
+        editTimeButton.setOnClickListener {
+            showEditTaskTimeDialog(date, task)
+        }
+
+        removeButton.setOnClickListener {
+            taskManager.removeTask(date, task)
+            taskListForSelectedDate.removeTask(date, task)
+            updateTaskListForSelectedDate(date)
+        }
+
+        val dialog = builder.create()
+
+        cancelButton.setOnClickListener {
+            // Zrušení editace - obnovte původní stav úkolu
+            if (originalTask != null) {
+                taskManager.editTaskName(date, task, originalTask)
+                taskListForSelectedDate.editTaskName(date, task, originalTask)
+                updateTaskListForSelectedDate(date)
+            }
+            dialog.dismiss()
+        }
+
+        confirmButton.setOnClickListener {
+            // Potvrzení editace - uložte změny a zavřete dialogové okno
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun showEditTaskNameDialog(date: String, task: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Edit Task Name")
+
+        val input = EditText(this)
+        builder.setView(input)
+
+        builder.setPositiveButton("OK") { dialog, _ ->
+            val newTaskName = input.text.toString()
+            taskManager.editTaskName(date, task, newTaskName)
+            taskListForSelectedDate.editTaskName(date, task, newTaskName)
+            updateTaskListForSelectedDate(date)
+            dialog.dismiss()
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
+
+    private fun showEditTaskTimeDialog(date: String, task: String) {
+        val timePickerDialog = TimePickerDialog(this, { _, hourOfDay, minute ->
+            val newTime = String.format("%02d:%02d", hourOfDay, minute)
+            taskManager.editTaskTime(date, task, newTime)
+            taskListForSelectedDate.editTaskTime(date, task, newTime)
+            updateTaskListForSelectedDate(date)
+        }, 12, 0, true)
+
+        timePickerDialog.setTitle("Select New Time")
+        timePickerDialog.show()
+    }
+
+    data class Task(var description: String, val date: String, var time: String)
 
     inner class TaskManager(private val context: Context) {
         private val tasks = mutableListOf<Task>()
@@ -161,6 +239,10 @@ class MainActivity : Activity() {
         fun addTask(date: String, taskName: String, time: String) {
             tasks.add(Task(taskName, date, time))
             saveTasks()
+        }
+
+        fun getTask(date: String, taskName: String): Task? {
+            return tasks.find { it.date == date && it.description == taskName }
         }
 
         fun getTasksForDate(date: String): List<Task> {
@@ -184,6 +266,16 @@ class MainActivity : Activity() {
 
         fun removeTask(date: String, taskName: String) {
             tasks.removeAll { it.date == date && it.description == taskName }
+            saveTasks()
+        }
+
+        fun editTaskName(date: String, taskName: String, newTaskName: String) {
+            tasks.find { it.date == date && it.description == taskName }?.description = newTaskName
+            saveTasks()
+        }
+
+        fun editTaskTime(date: String, taskName: String, newTime: String) {
+            tasks.find { it.date == date && it.description == taskName }?.time = newTime
             saveTasks()
         }
     }
@@ -224,6 +316,26 @@ class MainActivity : Activity() {
         fun removeTask(date: String, task: String) {
             tasksMap[date]?.remove(task)
             saveTasksMap()
+        }
+
+        fun editTaskName(date: String, task: String, newTaskName: String) {
+            tasksMap[date]?.let { tasks ->
+                val index = tasks.indexOf(task)
+                if (index != -1) {
+                    tasks[index] = tasks[index].replaceBefore(" at ", "$newTaskName at ")
+                    saveTasksMap()
+                }
+            }
+        }
+
+        fun editTaskTime(date: String, task: String, newTime: String) {
+            tasksMap[date]?.let { tasks ->
+                val index = tasks.indexOf(task)
+                if (index != -1) {
+                    tasks[index] = tasks[index].replaceAfter(" at ", " at $newTime")
+                    saveTasksMap()
+                }
+            }
         }
     }
 }

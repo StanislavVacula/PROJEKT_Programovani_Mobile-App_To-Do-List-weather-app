@@ -49,12 +49,12 @@
             android:elevation="4dp"
             android:background="#3F51B5"/>
 
-        <!-- Tlačítko na odstranění úkolů -->
+        <!-- Tlačítko pro editaci úkolů -->
         <Button
-            android:id="@+id/removeTaskButton"
+            android:id="@+id/editTaskButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remove Task"
+            android:text="Edit Task"
             android:layout_marginStart="20dp"
             android:textColor="#ffffff"
             android:textSize="18sp"
