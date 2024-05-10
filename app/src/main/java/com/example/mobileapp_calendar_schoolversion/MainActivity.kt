@@ -122,6 +122,10 @@ class MainActivity : Activity() {
 
     private fun showEditTaskDialog() {
         val tasksForDate = taskListForSelectedDate.getTasks(dateTV.text.toString())
+        if (tasksForDate.isEmpty()) {
+            Toast.makeText(this, "Task list is empty", Toast.LENGTH_SHORT).show()
+            return
+        }
         val checkedItem = intArrayOf(0)
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Edit Task")
