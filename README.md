@@ -1,33 +1,35 @@
-# Mobile-App Kalendář 
+# Mobilní Aplikace Kalendář
 
 ## Popis
 
-Tento projekt je mobilní aplikace kalendáře, která kombinuje funkce tradičního kalendáře s organizátorem úkolů a předpovědí počasí. Uživatelé mohou snadno plánovat své aktivity, sledovat své úkoly a být informováni o počasí, všechno na jednom místě.
+Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s organizátorem úkolů. Uživatelé mohou snadno plánovat své aktivity a sledovat své úkoly na jednom místě.
 
 ## Funkce
 
-- **Kalendář**: Zobrazuje aktuální měsíc s možností přechodu mezi jednotlivými měsíci.
-- **To-Do Seznam**: Umožňuje uživatelům přidávat, upravovat a mazat úkoly. Úkoly jsou automaticky propojeny s datem v kalendáři.
-- **Podrobnosti dne**: Při kliknutí na konkrétní den se zobrazí to-do seznam pro tento den spolu s předpovědí počasí pro daný den.
-- **Předpověď počasí**: Zobrazuje aktuální počasí pro vybraný den, včetně teploty, stavu počasí a dalších relevantních informací.
+- **Kalendář**: Zobrazuje aktuální měsíc s možností navigovat mezi měsíci.
+- **Seznam úkolů**: Umožňuje uživatelům přidávat, upravovat a mazat úkoly. Úkoly jsou automaticky propojeny s datem v kalendáři.
+- **Detaily dne**: Po kliknutí na konkrétní den se zobrazí seznam úkolů pro tento den.
+- **Správa úkolů**: Uživatelé mohou přidávat úkoly na konkrétní den, upravovat existující úkoly nebo odstraňovat úkoly. Každý úkol má název a čas.
 
 ## Instalace
 
-1. Stažení nejnovější verze aplikace z tohoto github repoozitáře.
-2. Nainstalování aplikace na vaše mobilní zařízení pomocí standardního procesu instalace aplikací.
+1. Naklonujte tento repozitář na svůj lokální stroj.
+2. Otevřete projekt v Android Studio.
+3. Spusťte aplikaci na svém zařízení nebo emulátoru.
 
 ## Nástroje
-- **Vývovojové prostředí**: Pro vývoj aplikace jsme využili nejnovější verzi Android studio (verze 2023.2.1).
-- **Jazyk**: Pracovali jsme s programovacím jazykem kotlin který byl výrazně ovlivněn jazykem java, se kterým již máme zkušenosti.
-- **Databáze**: Bylo nutné taky použít databázi pro ukládání úkolů každého uživatele. Využili jsme tedy služby firebase databáze.
+
+- **Vývojové prostředí**: Aplikace je vyvíjena v Android Studio.
+- **Jazyk**: Aplikace je napsána v Kotlinu.
+- **Databáze**: Aplikace používá sdílené preference pro ukládání úkolů.
 
 ## Použití
 
-1. Po spuštění aplikace se uživatel dostane na hlavní obrazovku kalendáře.
-2. Pro přidání úkolu klikněte na konkrétní den v kalendáři a poté na tlačítko "Přidat úkol".
-3. Pro zobrazení to-do seznamu pro konkrétní den klikněte na daný den v kalendáři.
-4. Pro zobrazení předpovědi počasí pro konkrétní den klikněte na daný den v kalendáři a poté na tlačítko "Zobrazit počasí".
+1. Po spuštění aplikace je uživateli prezentována hlavní obrazovka kalendáře.
+2. Pro přidání úkolu klikněte na konkrétní den v kalendáři a poté klikněte na tlačítko "Přidat úkol".
+3. Pro zobrazení seznamu úkolů pro konkrétní den klikněte na den v kalendáři.
+4. Pro úpravu úkolu klikněte na tlačítko "Upravit úkol". Tím se otevře dialog, kde můžete vybrat úkol k úpravě, změnit název úkolu nebo čas, nebo odstranit úkol.
 
-## Podpora a Příspěvky
+## Podpora a příspěvky
 
-Pokud narazíte na chyby nebo máte návrhy na vylepšení, můžete nás kontaktovat na našem webovém webu nebo otevřít nový problém v našem repozitáři na GitHubu.
+Pokud narazíte na jakékoliv chyby nebo máte návrhy na vylepšení, můžete otevřít nový problém v tomto repozitáři.
