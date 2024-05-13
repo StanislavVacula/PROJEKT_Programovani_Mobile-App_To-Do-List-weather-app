@@ -21,7 +21,6 @@ Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s or
 
 - **Vývojové prostředí**: Aplikace je vyvíjena v Android Studio.
 - **Jazyk**: Aplikace je napsána v Kotlinu.
-- **Databáze**: Aplikace používá sdílené preference pro ukládání úkolů.
 
 ## Použití
 
