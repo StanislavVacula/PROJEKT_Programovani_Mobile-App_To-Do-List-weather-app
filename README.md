@@ -23,8 +23,8 @@ Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s or
 
 ## Nástroje
 
-- **Vývojové prostředí**: Aplikace je vyvíjena v Android Studio.
-- **Jazyk**: Aplikace je napsána v Kotlinu.
+- **Vývojové prostředí**: Aplikace je vyvíjena v Android Studio. (verze: android-studio-2023.2.1.25-windows)
+- **Jazyk**: Aplikace je napsána v Kotlinu. (verze 1.9.24)
 
 ## Použití
 
