@@ -29,7 +29,7 @@ Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s or
 ## Použití
 
 1. Po spuštění aplikace je uživateli prezentována hlavní obrazovka kalendáře.
-2. Pro přidání úkolu klikněte na koúvod to kotlin syntaxe - https://www.youtube.com/watch?v=F9UC9DY-vIUnkrétní den v kalendáři a poté klikněte na tlačítko "Přidat úkol".
+2. Pro přidání úkolu klikněte na konkrétní den v kalendáři a poté klikněte na tlačítko "Přidat úkol".
 3. Pro zobrazení seznamu úkolů pro konkrétní den klikněte na den v kalendáři.
 4. Pro úpravu úkolu klikněte na tlačítko "Upravit úkol". Tím se otevře dialog, kde můžete vybrat úkol k úpravě, změnit název úkolu nebo čas, nebo odstranit úkol.
 
