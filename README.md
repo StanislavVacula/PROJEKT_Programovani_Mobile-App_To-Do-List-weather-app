@@ -35,10 +35,12 @@ Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s or
 
 ## Návody
 
--**Úvod to kotlin syntaxe**: https://www.youtube.com/watch?v=F9UC9DY-vIU
--**Úplný úvod do android studia**: https://developer.android.com/codelabs/basic-android-kotlin-compose-first-app#0
--**Kalendář**: https://developer.android.com/reference/android/icu/util/Calendar
--**To do List**: https://hub.packtpub.com/how-to-develop-a-simple-to-do-list-app-tutorial/
+Jistě, zde je informace formátovaná v Markdownu:
+
+- **[Úvod do syntaxe Kotlinu](https://www.youtube.com/watch?v=F9UC9DY-vIU)**: Odkaz na video na YouTube, které poskytuje úvod do syntaxe Kotlinu.
+- **[Úplný úvod do Android Studia](https://developer.android.com/codelabs/basic-android-kotlin-compose-first-app#0)**: Kompletní úvod do Android Studia, poskytnutý oficiálními stránkami Android Developer.
+- **[Kalendář](https://developer.android.com/reference/android/icu/util/Calendar)**: Odkaz na oficiální dokumentaci Android Developer pro utilitu Kalendář.
+- **[Seznam úkolů](https://hub.packtpub.com/how-to-develop-a-simple-to-do-list-app-tutorial/)**: Tutoriál, jak vytvořit jednoduchou aplikaci Seznam úkolů.
 
 ## Podpora a příspěvky
 
