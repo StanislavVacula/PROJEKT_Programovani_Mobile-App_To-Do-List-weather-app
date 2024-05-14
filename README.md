@@ -1,5 +1,9 @@
 # Mobilní Aplikace Kalendář
 
+## Autoři
+- **Stanislav Vacula**
+- **Vojtěch Pavelka**
+
 ## Popis
 
 Toto je mobilní aplikace, která kombinuje funkce tradičního kalendáře s organizátorem úkolů. Uživatelé mohou snadno plánovat své aktivity a sledovat své úkoly na jednom místě.
